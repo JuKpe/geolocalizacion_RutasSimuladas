@@ -78,4 +78,41 @@ http://localhost:8080/mapa.html
 
 🐳 Contenido del Dockerfile
 
+FROM eclipse-temurin:17-jdk AS builder
 
+WORKDIR /app
+
+COPY . .
+
+RUN ./mvnw clean package -DskipTest
+
+FROM eclipse-temurin:17-jre
+
+WORKDIR /app
+
+COPY --from=builder /app/target/*.jar app.jar
+
+EXPOSE 8080
+
+ENTRYPOINT ["java", "-jar","app.jar"]
+
+## 📡 Endpoints WebSocket
+
+📤 Enviar posiciones:
+<p align="center">
+POST http://localhost:8080/app/enviar
+</p>
+📥 Canal de recepción en frontend:
+<p align="center">
+/ubicacion
+</p>
+📍 Socket Endpoint:
+<p align="center">
+/ws-ubicacion
+</p>
+
+## ✨ Autor
+JuKpe
+
+## 📄 Licencia
+Este proyecto está bajo la licencia MIT. Puedes usarlo, modificarlo y distribuirlo libremente.
